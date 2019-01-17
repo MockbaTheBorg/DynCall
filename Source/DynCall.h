@@ -1,5 +1,39 @@
-// Two externs are necessary because functions returning integers will do it on RAX
-// while functions returning floats will do it on XMM0 (can't cast)
-// Not sure how to overcome this.
-extern "C" uint64_t _DynCall_I(uint64_t);
-extern "C" float _DynCall_F(uint64_t);
+extern "C" void* _DynCall(uint64_t);
+
+// Define the "context", a memory area to hold the function calling information
+// The header is an uint64_t array:
+// nnnnnnnn - Number of parameters to be passed
+// aaaaaaaa - Address of the function to call (JMP to)
+// 11111111 - Arg1
+// 22222222 - Arg2
+// ........ - And so on
+//
+#define MAX_ARGS 32
+class DynCallContext {
+	// Data fields
+private:
+	uint64_t nArgs = 0;
+	uint64_t Address = 0;
+	uint64_t Args[MAX_ARGS];
+
+public:
+	// Initalize Context
+	template<typename T>
+	void Init(T address) {
+		nArgs = 0;
+		Address = (uint64_t)address;
+		for(int i = 0; i < MAX_ARGS; i++)
+			Args[i] = 0xCCCCCCCCCCCCCCCC;
+	}
+	// Push a value onto the context
+	template<typename T>
+	void Push(T val) {
+		if(nArgs < MAX_ARGS)
+			*reinterpret_cast<T*>(&Args[nArgs++]) = val;
+	}
+	// Make the call
+    template <typename R>
+    inline R Call() {
+		return reinterpret_cast<R(__fastcall *)(uint64_t)>(_DynCall)((uint64_t)this);
+    }
+};

@@ -1,4 +1,9 @@
-;
+PUBLIC _DynCall
+
+.code
+ 
+_DynCall PROC
+
 	push rsi							; Save some nonvolatile registers
 	push rdi							;
 	push rbp 							;
@@ -24,22 +29,22 @@
 	rep movsq							;
 
 	mov	rcx, [rsp]						; Place arg1 on its register (RCX/XMM0)
-	movss xmm0, dword ptr [rsp]			;
+	movq xmm0, rcx						;
 	cmp eax, 1							; Only one arg?
 	je noargs							; ... yes.
 
 	mov rdx, [rsp + 08h]				; Place arg2 (if any) on its register (RDX/XMM1)
-	movss xmm1, dword ptr [rsp + 08h]	;
+	movq xmm1, rdx						;
 	cmp eax, 2							; Only two args?
 	je noargs							; ... yes.
 
 	mov r8, [rsp + 10h]					; Place arg3 (if any) on its register (R8/XMM2)
-	movss xmm2, dword ptr [rsp + 10h]	;
+	movq xmm2, r8						;
 	cmp eax, 3							; Only three args?
 	je noargs							; ... yes.
 
 	mov r9, [rsp + 18h]					; Place arg4 (if any) on its register (R9/XMM3)
-	movss xmm3, dword ptr [rsp + 18h]	;
+	movq xmm3, r9						;
 
 noargs:
     call r10							; Executes the called function
@@ -54,3 +59,7 @@ noargs:
 	pop rsi								;
 
 	ret									; Back to the caller
+
+_DynCall ENDP
+
+END
