@@ -1,10 +1,30 @@
 # DynCall
 
-This library of functions is an useful proof of concept which allows one
-to call any __fastcall function on a 64 bit environment dynamically.
+This is a class I developed to allow for calling any __\_\_fastcall__ function on a X64 environment.
+The idea is to have the call arguments built in memory prior to making the call, this way the called function prototype doesn't need to be statically compiled.
 
-User case: This was build to be used by (to be released) GTALua3. When doing reverse engineering of an application, or modding a
-program or anything, we may need to call a function we see on IDA without having to leave the program (game) and recompile.
-DynCall allows us to do it.
+Use case: This class was used on (yet to be released) GTALua3, to call in-game functions wihout having to predefine their prototypes, and therefore allow to call different functions from Lua while researching them on IDA or any other decompiler, without having to leave the game and recompile the GTALua3 code.
 
-The source code has a few use examples.
+This can be used also to make calls to functions from Assembly, for example, or from any other language than Lua.
+
+The usage is very simple:
+* First create a calling context by doing:<br>
+    ```
+    DynCallContext ctx;
+* Then initialize the calling context with the address of the function to call:<br>
+    ```
+    ctx.Init(SomeFunction);
+* At this point, add all the arguments in order:<br>
+    ```
+    ctx.Push(arg1);
+    ctx.Push(arg2);
+    ctx.Push(arg3);
+* Then make the call:<br>
+    ```
+    int result = ctx.Call<int>();
+If enough care is taken to pass the correct argument order, types and number, the function will be called as if it was done like:<br>
+    ```
+    int result = SomeFunction(arg1, arg2, arg3);
+    ```
+
+The DynCall.cpp file contains a few usage examples.
