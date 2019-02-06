@@ -28,3 +28,7 @@ If enough care is taken to pass the correct argument order, types and number, th
     ```
 
 The DynCall.cpp file contains a few usage examples.
+
+If you like this project, and feels like helping me out with my music, please check:<br>
+http://GoFundMe.com/make-analog-music-great-again/
+
