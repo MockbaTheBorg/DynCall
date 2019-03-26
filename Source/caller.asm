@@ -47,10 +47,12 @@ _DynCall PROC
 	movq xmm3, r9						;
 
 noargs:
-    call r10							; Executes the called function
+	mov rax, return						; Pushes the return address onto the stack
+	push rax
+	jmp r10								; Executes the called function
 										;   Which will probably crash ...
 										;      ... or maybe not!  :)
-
+return:
 	mov rsp, r12						; Gets the rsp back to where it was before
 
 	pop r12								; Restore nonvolatile registers
