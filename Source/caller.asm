@@ -6,24 +6,26 @@ _DynCall PROC
 
 	push rsi							; Save some nonvolatile registers
 	push rdi							;
-	push rbp 							;
 	push r12							;
+
+	sub	rsp, 10h						; Give the stack some slack
+	mov	r12, rsp						; and save it
 
 	mov rax, [rcx]						; Gets the number of arguments onto RAX
 
 	add rcx, 8							; Gets the address of the called function 
 	mov	r10, [rcx]						; onto R10
 
-	add rcx, 8							; Points RCX to the first argument
-
-	mov r12, rsp						; Saves the RSP onto R12
-
-	test eax, eax						; Do we have any args?
+	test eax, eax						; Do we have any arguments?
 	jz noargs							;
 
-	sub rsp, 108h						; Open enough space in the stack for 32 args
+	shl eax,3							; Open enough space in the stack for the arguments
+	sub rsp, rax						;
+	shr eax,3							;
 
-	mov rsi, rcx						; Copies all the parameters to the stack
+	add rcx, 8							; Points RCX to the first argument
+
+	mov rsi, rcx						; Copies all the arguments to the stack
 	mov rcx, rax						;
 	mov rdi, rsp						;
 	rep movsq							;
@@ -47,20 +49,19 @@ _DynCall PROC
 	movq xmm3, r9						;
 
 noargs:
-	mov rax, return						; Pushes the return address onto the stack
-	push rax
-	jmp r10								; Executes the called function
+    call r10							; Executes the called function
 										;   Which will probably crash ...
 										;      ... or maybe not!  :)
+
 return:
-	mov rsp, r12						; Gets the rsp back to where it was before
+	mov rsp, r12						; Restore the stack and...
+	add	rsp, 10h						; get the stack slack back
 
 	pop r12								; Restore nonvolatile registers
-	pop rbp								;
 	pop rdi								;
 	pop rsi								;
 
-	ret									; Back to the caller
+	ret									; Back to the original caller
 
 _DynCall ENDP
 

@@ -90,4 +90,12 @@ int main(void) {
 	ctx.Push(123.456f);
 	ctx.Push(999);
 	printf("6th is: %d.\n", ctx.Call<int>());
+	//
+	nioCall<void>(&printf, "0x%08x  %s\n", 12947765, "TEST");
+	//
+	ctx.Init(printf);
+	ctx.Push("0x%08x  %s\n");
+	ctx.Push(12947765);
+	ctx.Push("TEST");
+	ctx.Call<void>();
 }

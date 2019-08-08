@@ -1,10 +1,10 @@
 workspace "DynCall"
-	location "Build"
+	location "VStudio"
 	configurations { "Debug", "Release" }
 	platforms { "X64" }
 	startproject "DynCall"
 	pic "On"
-	systemversion "10.0.15063.0"
+	systemversion "10.0.17763.0"
 	characterset "ASCII"
 
 project "DynCall"
@@ -14,7 +14,7 @@ project "DynCall"
 	targetdir "Binary"
 	includedirs { }
 
-	files { "**.hpp", "**.h", "**.cpp", "**.c", "**.asm", "**.inc", "**.def"}
+	files { "Source/**"}
 	removefiles { }
  
 	vpaths {
@@ -34,5 +34,5 @@ project "DynCall"
 -- Cleanup
 if _ACTION == "clean" then
 	os.rmdir("Binary");
-	os.rmdir("Build");
+	os.rmdir("VStudio");
 end

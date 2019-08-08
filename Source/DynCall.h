@@ -8,6 +8,12 @@ extern "C" void* _DynCall(uint64_t);
 // 22222222 - Arg2
 // ........ - And so on
 //
+
+template <typename TRet = void, typename... TArgs, typename TAddr>
+constexpr inline TRet nioCall(TAddr address, TArgs... args) {
+	return reinterpret_cast<TRet(*)(TArgs...)>(address)(args ...);
+}
+
 #define MAX_ARGS 32
 class DynCallContext {
 	// Data fields
@@ -23,7 +29,7 @@ public:
 		nArgs = 0;
 		Address = (uint64_t)address;
 		for(int i = 0; i < MAX_ARGS; i++)
-			Args[i] = 0xCCCCCCCCCCCCCCCC;
+			Args[i] = 0x0;
 	}
 	// Push a value onto the context
 	template<typename T>
