@@ -3,7 +3,7 @@
 This is a class I developed to allow for calling any __\_\_fastcall__ function on a X64 environment.
 The idea is to have the call arguments built in memory prior to making the call, this way the called function prototype doesn't need to be statically compiled.
 
-Use case: This class was used on (yet to be released) GTALua3, to call in-game functions wihout having to predefine their prototypes, and therefore allow to call different functions from Lua while researching them on IDA or any other decompiler, without having to leave the game and recompile the GTALua3 code.
+Use case: This class was used on GTALua4, to call in-game functions wihout having to predefine their prototypes, and therefore allow to call different functions from Lua while researching them on IDA or any other decompiler, without having to leave the game and recompile the GTALua3 code.
 
 This can be used also to make calls to functions from Assembly, for example, or from any other language than Lua.
 
